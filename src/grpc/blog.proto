@@ -2,10 +2,10 @@ syntax = "proto3";
 
 option java_package = "io.grpc.examples";
 
-package helloworld;
+package blog;
 
 // The greeter service definition.
-service Greeter {
+service Blog {
   // Sends a greeting
   rpc greeter (HelloRequest) returns (HelloReply) {}
 }

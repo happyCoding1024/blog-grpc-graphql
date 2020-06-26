@@ -1,7 +1,9 @@
 // 引用 mysql
 const mysql = require('mysql');
 // 引用配置文件
-const { MYSQL_CONF } = require('../config/db');
+import { MYSQL_CONF } from '../config/db'
+
+console.log(MYSQL_CONF)
 
 // 创建连接对象
 const con = mysql.createConnection(MYSQL_CONF);

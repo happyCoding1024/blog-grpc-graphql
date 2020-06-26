@@ -1,13 +1,14 @@
-var grpc = require('grpc')
+import * as  grpc from 'grpc'
 
-var PROTO_PATH = './impl.proto'
-var conf = require('../config/grpcConf')
-var impl_proto = grpc.load(PROTO_PATH).helloworld
+var PROTO_PATH = './blog.proto'
+import conf from '../config/grpcConf'
+var blog_proto = grpc.load(PROTO_PATH).blog
 const { exec } = require('../db/mysql')
 
+console.log(conf)
 // Simple RPC
 function greeter(call, callback) {
-  const sql = `select * from blogs where author = 'zhangsan';`
+  const sql = `select * from blogs where author = '${call.request.name}';`
   console.log(sql)
   exec(sql).then(result => {
     callback(null, JSON.stringify(result))  
@@ -15,7 +16,7 @@ function greeter(call, callback) {
 }
 
 var server = new grpc.Server()
-server.addProtoService(impl_proto.Greeter.service, {
+server.addProtoService(blog_proto['Blog'].service, {
   greeter: greeter
 })
 server.bind(conf.ip.server + ':' + conf.port, grpc.ServerCredentials.createInsecure())
