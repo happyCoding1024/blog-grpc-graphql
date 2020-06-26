@@ -10,7 +10,6 @@ function greeter(call, callback) {
   const sql = `select * from blogs where author = 'zhangsan';`
   console.log(sql)
   exec(sql).then(result => {
-    console.log(result)
     callback(null, JSON.stringify(result))  
   })
 }
