@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option java_package = "io.grpc.examples";
+
+package blog;
+
+// The greeter service definition.
+service Blog {
+  // Sends a greeting
+  rpc greeter (HelloRequest) returns (HelloReply) {}
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+// callback 中第二个参数是message属性的值，并且一定要是string类型的
+// 不是的话应该将其放在 JSON.stringify() 里面
+message HelloReply {
+  string message = 1;
+}
+
