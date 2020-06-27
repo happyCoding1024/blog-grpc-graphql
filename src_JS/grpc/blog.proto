@@ -2,23 +2,33 @@ syntax = "proto3";
 
 option java_package = "io.grpc.examples";
 
-package helloworld;
+package blog;
 
 // The greeter service definition.
-service Greeter {
-  // Sends a greeting
-  rpc greeter (HelloRequest) returns (HelloReply) {}
+service Blog {
+  // 获取文章列表
+  rpc getListGrpc (GetListRequest) returns (GetListReply) {}
+  // 获取文章详情
+  rpc getDetailGrpc (GetDetailRequest) returns (GetDetailReply) {}
 }
 
 // The request message containing the user's name.
-message HelloRequest {
+message GetListRequest {
   string name = 1;
 }
 
 // The response message containing the greetings
 // callback 中第二个参数是message属性的值，并且一定要是string类型的
 // 不是的话应该将其放在 JSON.stringify() 里面
-message HelloReply {
+message GetListReply {
+  string message = 1;
+}
+
+message GetDetailRequest {
+  int32 id = 1;
+}
+
+message GetDetailReply {
   string message = 1;
 }
 
