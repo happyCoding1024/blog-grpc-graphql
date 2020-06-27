@@ -4,6 +4,7 @@ const { buildSchema } = require('graphql')
 const grpc = require('grpc')
 const PROTO_PATH = './grpc/blog.proto'
 const conf = require('./config/grpcConf')
+const { resolveFieldValueOrError } = require('graphql/execution/execute')
 
 const blog_proto = grpc.load(PROTO_PATH).blog
 const client = new blog_proto.Blog(conf.ip.client + ':' + conf.port, grpc.credentials.createInsecure())
@@ -37,6 +38,54 @@ function getDetail (id) {
   })
 }
 
+// 新建博客
+function createBlog (input) {
+  return new Promise((resolve, reject) => {
+    client.newBlogGrpc({
+      title: input.title,
+      content: input.content
+    }, function (err, response) {
+      console.log(response)
+      if(!err) {
+        resolve(JSON.parse(response.message))
+      } else {
+        reject(err)
+      }
+    })
+  })
+}
+
+// 更新博客
+function updateBlog (input) {
+  return new Promise((resolve, reject) => {
+    console.log('input = ', input)
+    client.updateBlogGrpc({
+      id: parseInt(input.id),
+      title: input.title,
+      content: input.content
+    }, function (err, response) {
+      if (!err) {
+        resolve(JSON.parse(response.message))
+      } else {
+        reject(err)
+      }
+    })
+  })
+}
+
+// 删除博客
+function deleteBlog (input) {
+  return new Promise((resolve, reject) => {
+    client.deleteBlogGrpc({
+      id: parseInt(input.id)
+    }, function (err, response) {
+      if (!err) {
+        resolve(JSON.parse(response.message))
+      }
+    })
+  })
+}
+
 
 const app = express()
 // 定义 schema
@@ -47,17 +96,42 @@ const schema = buildSchema(`
     content: String
     createtime: String
     author: String
-    abstract: String
+  }
+  input BlogInput {
+    title: String
+    content: String
+  }
+  input BlogUpdate {
+    id: ID
+    title: String
+    content: String
+  }
+  input BlogDelete {
+    id: ID
+  }
+  type InsertResult {
+    insertId: Int
+  }
+  type UpdateResult {
+    insertId: Int
+  }
+  type DeleteResult {
+    insertId: Int
   }
   type User {
     id: ID
     username: String
     password: String
   }
+  type Mutation {
+    newBlog(input: BlogInput!): InsertResult
+    updateBlog(input: BlogUpdate): UpdateResult
+    deleteBlog(input: BlogDelete): DeleteResult
+  }
   type Query {
     getArticleList(author: String): [Blog]
     getArticleDetail(id: Int): [Blog]
-  }
+  }  
 `)
 
 const root = { 
@@ -81,6 +155,36 @@ const root = {
       getDetail(id).then(articleList => {
         console.log(articleList)
         resolve(articleList)
+      })
+    })
+  },
+
+  // 新建博客
+  newBlog({ input }) {
+    return new Promise((resolve, reject) => {
+      // insertData 是往数据库中插入数据后的返回结果，形式是 {"fieldCount":0,"affectedRows":1,"insertId":21,"serverStatus":2,"warningCount":0,"message":"","protocol41":true,"changedRows":0}
+      // 很明显不能直接将它 resolve
+      createBlog(input).then(insertData => {
+        console.log('insertData = ', insertData)
+        resolve(insertData)
+      })
+    })
+  },
+
+  // 更新博客
+  updateBlog({ input }) {
+    return new Promise((resolve, reject) => {
+      updateBlog(input).then(updateData => {
+        resolve(updateData)
+      })
+    })
+  },
+
+  // 删除博客
+  deleteBlog({input}) {
+    return new Promise((resolve, reject) => {
+      deleteBlog(input).then(deleteData => {
+        resolve(deleteData)
       })
     })
   }

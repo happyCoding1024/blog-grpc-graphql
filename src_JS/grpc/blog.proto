@@ -10,13 +10,17 @@ service Blog {
   rpc getListGrpc (GetListRequest) returns (GetListReply) {}
   // 获取文章详情
   rpc getDetailGrpc (GetDetailRequest) returns (GetDetailReply) {}
+  // 新建博客
+  rpc newBlogGrpc (NewBlogRequest) returns (NewBlogReply) {}
+  // 更新博客
+  rpc updateBlogGrpc (UpdateBlogRequest) returns (UpdateBlogReply) {}
+  // 删除博客
+  rpc deleteBlogGrpc (DeleteBlogRequest) returns (DeleteBlogReply) {}
 }
 
-// The request message containing the user's name.
 message GetListRequest {
   string name = 1;
 }
-
 // The response message containing the greetings
 // callback 中第二个参数是message属性的值，并且一定要是string类型的
 // 不是的话应该将其放在 JSON.stringify() 里面
@@ -27,8 +31,32 @@ message GetListReply {
 message GetDetailRequest {
   int32 id = 1;
 }
-
 message GetDetailReply {
   string message = 1;
 }
+
+message NewBlogRequest {
+  string title = 1;
+  string content = 2;
+}
+message NewBlogReply {
+  string message = 1;
+}
+
+message UpdateBlogRequest {
+  int32 id = 1;
+  string title = 2;
+  string content = 3;
+}
+message UpdateBlogReply {
+  string message = 1;
+}
+
+message DeleteBlogRequest {
+  int32 id = 1;
+}
+message DeleteBlogReply {
+  string message = 1;
+}
+
 
