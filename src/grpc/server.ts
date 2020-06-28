@@ -1,23 +1,19 @@
-import * as  grpc from 'grpc'
-
-var PROTO_PATH = './blog.proto'
+import * as grpc from 'grpc'
 import conf from '../config/grpcConf'
-var blog_proto = grpc.load(PROTO_PATH).blog
-const { exec } = require('../db/mysql')
+import { getListGrpc, getDetailGrpc, newBlogGrpc, updateBlogGrpc, deleteBlogGrpc } from '../controller/blog'
+import { loginGrpc, registerGrpc } from '../controller/user'
 
-console.log(conf)
-// Simple RPC
-function greeter(call, callback) {
-  const sql = `select * from blogs where author = '${call.request.name}';`
-  console.log(sql)
-  exec(sql).then(result => {
-    callback(null, JSON.stringify(result))  
-  })
-}
-
-var server = new grpc.Server()
+const PROTO_PATH = './blog.proto'
+const blog_proto = grpc.load(PROTO_PATH).blog
+const server = new grpc.Server()
 server.addProtoService(blog_proto['Blog'].service, {
-  greeter: greeter
+  getListGrpc,
+  getDetailGrpc,
+  newBlogGrpc,
+  updateBlogGrpc,
+  deleteBlogGrpc,
+  loginGrpc,
+  registerGrpc
 })
 server.bind(conf.ip.server + ':' + conf.port, grpc.ServerCredentials.createInsecure())
 server.start()

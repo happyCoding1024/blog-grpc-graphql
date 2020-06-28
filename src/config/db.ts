@@ -2,8 +2,8 @@
 // const env = process.env.NODE_ENV; // 环境参数
 
 // 配置
-let MYSQL_CONF=null;
-let REDIS_CONF=null;
+let MYSQL_CONF=null
+let REDIS_CONF=null
 
 // TODO: 临时赋予一个dev，因为还没有配置script脚本
 const env = 'dev'
@@ -45,4 +45,4 @@ if (env === 'dev') {
 export {
   MYSQL_CONF,
   REDIS_CONF
-};
+}
