@@ -4,7 +4,7 @@
 
 **目录结构**
 
-```js
+```
 .
 ├── doc // Issue&UpdateLog
 ├── build // TS 文件编译结果
@@ -28,6 +28,7 @@
 				 |- blog.proto
 │   ├── app.ts
 ├── src_JS // JS版本代码
+├── example // GraphQL,GRPC单独的测试案例
 ├── README.md
 ├── package-lock.json
 ├── package.json
@@ -107,7 +108,7 @@ MYSQL_CONF = {
 
 [调试验证接口说明](doc/调试验证接口说明.md)
 
-[GraphQL学习笔记](doc/GraphQL学习笔记)
+[GraphQL学习笔记](doc/GraphQL学习笔记.md)
 
 [GRPC学习笔记](doc/GRPC学习笔记.md)
 
