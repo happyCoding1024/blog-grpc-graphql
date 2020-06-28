@@ -1,22 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const grpc = require("grpc");
-var PROTO_PATH = './blog.proto';
 const grpcConf_1 = require("../config/grpcConf");
-var blog_proto = grpc.load(PROTO_PATH).blog;
-const { exec } = require('../db/mysql');
-console.log(grpcConf_1.default);
-// Simple RPC
-function greeter(call, callback) {
-    const sql = `select * from blogs where author = '${call.request.name}';`;
-    console.log(sql);
-    exec(sql).then(result => {
-        callback(null, JSON.stringify(result));
-    });
-}
-var server = new grpc.Server();
+const blog_1 = require("../controller/blog");
+const user_1 = require("../controller/user");
+const path = require("path");
+const PROTO_PATH = path.resolve(__dirname, 'blog.proto');
+const blog_proto = grpc.load(PROTO_PATH).blog;
+const server = new grpc.Server();
 server.addProtoService(blog_proto['Blog'].service, {
-    greeter: greeter
+    getListGrpc: blog_1.getListGrpc,
+    getDetailGrpc: blog_1.getDetailGrpc,
+    newBlogGrpc: blog_1.newBlogGrpc,
+    updateBlogGrpc: blog_1.updateBlogGrpc,
+    deleteBlogGrpc: blog_1.deleteBlogGrpc,
+    loginGrpc: user_1.loginGrpc,
+    registerGrpc: user_1.registerGrpc
 });
 server.bind(grpcConf_1.default.ip.server + ':' + grpcConf_1.default.port, grpc.ServerCredentials.createInsecure());
 server.start();
