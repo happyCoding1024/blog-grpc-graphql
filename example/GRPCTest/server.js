@@ -7,7 +7,6 @@ var impl_proto = grpc.load(PROTO_PATH).helloworld
 
 // Simple RPC
 function greeter(call, callback) {
-  console.log(call)
   callback(null, call.request.name)
 }
 

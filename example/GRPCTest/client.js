@@ -12,13 +12,12 @@ function callback() {
 }
 
 function main() {
-    // 在这里是调用的远程服务端的locate方法
-    client.greeter({
-      name: 'zhangsan'
-    }, function(err, response) {
-        console.log(124)
-        console.log(response)
-    })
+  // 在这里是调用的远程服务端的locate方法
+  client.greeter({
+    name: 'zhangsan'
+  }, function(err, response) {
+    console.log(response)
+  })
 }
 
 main()
